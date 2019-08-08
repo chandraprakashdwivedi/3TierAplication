@@ -3,7 +3,11 @@
   gather_facts: false
   vars_files:
      - group_vars/all.yml
+ 
   tasks:
+    - name: cloudformation template creation
+      command: 'echo $workspace'
+      
     - name: cloudformation template creation
       template:
         src= $workspace/template/cfn-template.yml
