@@ -8,7 +8,7 @@ node{
       checkout scm
 
      stage('deploying stack'){
-      echo $workspace
+      sh 'echo $workspace'
       sh 'ansible-playbook deploy.yml'
       } 
      
