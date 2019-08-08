@@ -1,1 +1,8 @@
-
+vpc: 
+subnet0:
+web_port:
+db_port:
+lb_port:
+ec2_key:
+instace_type:
+ami_id:
