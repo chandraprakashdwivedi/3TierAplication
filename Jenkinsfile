@@ -4,7 +4,7 @@ node{
       deleteDir()
       checkout scm
 
-     stage('adding plugin'){
+     stage('deploying stack'){
 
       sh 'ansible-playbook deploy.yml'
 
