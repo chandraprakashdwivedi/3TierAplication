@@ -7,7 +7,7 @@ node{
       checkout scm
 
      stage('deploying stack'){
-      sh 'ansible-playbook deploy.yml'
+      sh 'ansible-playbook deploy.yml -vvv'
       } 
      
 }
