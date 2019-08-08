@@ -3,9 +3,9 @@ properties([ disableConcurrentBuilds(),buildDiscarder(logRotator(numToKeepStr:'1
 node('master'){
       deleteDir()
       checkout scm
-
+}
 stage('deployment'){
 
-sh' ansible-playbook deploy.yml -vvv'     
+sh' ansible-playbook deploy.yml'     
 
  } 
