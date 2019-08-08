@@ -3,11 +3,12 @@ properties([ disableConcurrentBuilds(),buildDiscarder(logRotator(numToKeepStr:'1
 pipeline{
  agent any
 
+}
+
 stages {
 stage('deployment'){
 
-sh 'ansible-playbook deploy.yml'     
+sh 'ansible-playbook deploy.yml -vvv'    
 
     } 
-   }
 }
