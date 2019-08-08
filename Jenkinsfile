@@ -8,3 +8,5 @@ pipeline {
               sh ' ansible-playbook deploy.yml '  
             }
         }
+    }
+    
