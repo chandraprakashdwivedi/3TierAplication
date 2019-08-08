@@ -4,7 +4,7 @@
   vars_files:
      - group_vars/all.yml
      
-   tasks:
+  tasks:
       - name: cloudformation template creation
         template:
           src=templates/cfn-template.yml
