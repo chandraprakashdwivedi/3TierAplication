@@ -7,8 +7,8 @@
   tasks:
       - name: cloudformation template creation
         template:
-          src=templates/cfn-template.yml
-          dest=templates-generated/cfn-template-gen.yml
+          src=${workspace}/templates/cfn-template.yml
+          dest=${workspace}/templates-generated/cfn-template-gen.yml
         check_mode: no
 
       - name: cloudformation operation
@@ -17,5 +17,5 @@
           state: "present"
           region: "{{ region }}"
           disable_rollback: true
-          template: templates-generated/cfn-template-gen.yml
+          template:${workspace}/templates-generated/cfn-template-gen.yml
   
