@@ -1,4 +1,4 @@
-properties([ disableConcurrentBuilds(),buildDiscarder(logRotator(numToKeepStr:'10'), pipelineTriggers([githubPush()]) ]) 
+properties([ disableConcurrentBuilds(),buildDiscarder(logRotator(numToKeepStr:'10'), pipelineTriggers([githubPush()])
 
 node('master'){
       deleteDir()
@@ -6,6 +6,6 @@ node('master'){
 
 stage('deployment'){
 
-sh' ansible-playbook deploy.yml'     
+sh' ansible-playbook deploy.yml -vvv'     
 
  } 
