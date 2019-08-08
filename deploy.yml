@@ -11,7 +11,7 @@
           dest=templates-generated/cfn-template-gen.yml
         check_mode: no
 
-      - name: cloudformation - ecs - task-definition-service
+      - name: cloudformation operation
         cloudformation:
           stack_name: tier3Application
           state: "present"
