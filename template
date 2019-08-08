@@ -1,0 +1,210 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 3 tier web aplication
+Parameter:
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Default: {{ vpc }}
+  subnet0:
+    Type: AWS::EC2::Subnet::Id
+    Default: {{sunet0}}
+  ServiceName:
+    Type: String
+    Default: {{ service_name }}
+  WebPort:
+    Type: Number
+    Default: {{ web_port}}
+  DbPort:
+    Type: Number
+    Default: {{db_port}}
+  LbPort:
+    Type: Number
+    Default: {{lb_port}}
+  KeyName:
+    Type: String
+    Default: {{ ec2_key }}
+  InstanceType:
+    Type: String
+    Default: {{ instace_type }}
+  LatestAmiId:
+    Type: String
+    Default: {{ ami_id}}
+
+Resources:
+  WebSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort:
+            Ref: WebPort
+          ToPort:
+            Ref: WebPort
+
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort:
+            Ref: DbPort
+          ToPort:
+            Ref: DbPort
+
+  LBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort:
+            Ref: LbPort
+          ToPort:
+            Ref: LbPort
+          CidrIp: 0.0.0.0/0
+  
+  WebInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'InstanceType'
+      SecurityGroups: [!Ref 'WebSecurityGroup']
+      KeyName: !Ref 'KeyName'
+      ImageId: !Ref 'LatestAmiId'
+    
+  DBInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'InstanceType'
+      SecurityGroups: [!Ref 'DBSecurityGroup']
+      KeyName: !Ref 'KeyName'
+      ImageId: !Ref 'LatestAmiId'
+  
+  ElasticLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      AvailabilityZones: !GetAZs ''
+      CrossZone: 'true'
+      Listeners:
+      - LoadBalancerPort: '80'
+        InstancePort: '80'
+        Protocol: HTTP
+      HealthCheck:
+        Target: HTTP:80/
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
+      
+  WebServerGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
+        Count: '2'
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MaxBatchSize: '1'
+        MinInstancesInService: '1'
+        PauseTime: PT15M
+        WaitOnResourceSignals: 'true'
+    Properties:
+      AvailabilityZones: !GetAZs ''
+      LaunchConfigurationName: !Ref 'LaunchConfig'
+      MinSize: '1'
+      MaxSize: '2'
+      LoadBalancerNames: [!Ref 'ElasticLoadBalancer']
+
+  LaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          full_install: [install_cfn, install_app, verify_instance_health]
+        install_cfn:
+          files:
+            /etc/cfn/cfn-hup.conf:
+              content: !Join ['', ['[main]
+
+                    ', stack=, !Ref 'AWS::StackId', '
+
+                    ', region=, !Ref 'AWS::Region', '
+
+                    ']]
+              mode: '000400'
+              owner: root
+              group: root
+            /etc/cfn/hooks.d/cfn-auto-reloader.conf:
+              content: !Join ['', ['[cfn-auto-reloader-hook]
+
+                    ', 'triggers=post.update
+
+                    ', 'path=Resources.WebServerInstance.Metadata.AWS::CloudFormation::Init
+
+                    ', 'action=/opt/aws/bin/cfn-init -v ', '         --stack ', !Ref 'AWS::StackName',
+                  '         --resource WebServerInstance ', '         --configsets
+                    full_install ', '         --region ', !Ref 'AWS::Region', '
+
+                    ', 'runas=root
+
+                    ']]
+          services:
+            sysvinit:
+              cfn-hup:
+                enabled: 'true'
+                ensureRunning: 'true'
+                files: [/etc/cfn/cfn-hup.conf, /etc/cfn/hooks.d/cfn-auto-reloader.conf]
+        install_app:
+          packages:
+            yum:
+              httpd: []
+          files:
+            #/var/www/html/index.html:
+              content: !Join ['
+
+                  ', [<img src=", !FindInMap [Region2Examples, !Ref 'AWS::Region',
+                    Examples], /cloudformation_graphic.png" alt="AWS CloudFormation
+                    Logo"/>, '<h1>Congratulations, you have successfully launched
+                    the AWS CloudFormation sample.</h1>']]
+              mode: '000644'
+              owner: root
+              group: root
+          services:
+            sysvinit:
+              httpd:
+                enabled: 'true'
+                ensureRunning: 'true'
+        verify_instance_health:
+          commands:
+            ELBHealthCheck:
+              command: !Join ['', ['until [ "$state" == "\"InService\"" ]; do ', '  state=$(aws
+                    --region ', !Ref 'AWS::Region', ' elb describe-instance-health ',
+                  '              --load-balancer-name ', !Ref 'ElasticLoadBalancer',
+                  '              --instances $(curl -s http://169.254.169.254/latest/meta-data/instance-id) ',
+                  '              --query InstanceStates[0].State); ', '  sleep 10; ',
+                  done]]
+    Properties:
+      KeyName: !Ref 'KeyName'
+      ImageId: !Ref 'LatestAmiId'
+      InstanceType: !Ref 'InstanceType'
+      SecurityGroups:  [!Ref 'WebSecurityGroup']
+    #  IamInstanceProfile: !Ref 'WebServerInstanceProfile'
+      UserData: !Base64
+        Fn::Join:
+        - ''
+        - ['#!/bin/bash -xe
+
+            ', 'yum update -y aws-cfn-bootstrap
+
+            ', '/opt/aws/bin/cfn-init -v ', '         --stack ', !Ref 'AWS::StackName',
+          '         --resource LaunchConfig ', '         --configsets full_install ',
+          '         --region ', !Ref 'AWS::Region', '
+
+            ', '/opt/aws/bin/cfn-signal -e $? ', '         --stack ', !Ref 'AWS::StackName',
+          '         --resource WebServerGroup ', '         --region ', !Ref 'AWS::Region',
+          '
+            ']
+
