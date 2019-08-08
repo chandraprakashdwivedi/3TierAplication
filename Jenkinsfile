@@ -1,6 +1,6 @@
 pipeline {
     agent any
-}
+
     stages {
         stage('CLoudformation Deployment') {
             steps {
@@ -9,4 +9,4 @@ pipeline {
             }
         }
     }
-    
+}
