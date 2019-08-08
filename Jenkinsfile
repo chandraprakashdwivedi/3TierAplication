@@ -1,14 +1,15 @@
+properties([ disableConcurrentBuilds(), pipelineTriggers([githubPush()]) ]) 
+ 
 
 
-pipeline {
-    agent any
+node{
+      deleteDir()
+      checkout scm
 
-    
-        stage('CLoudformation Deployment') {
-            
-                echo 'Cloudfromation Started'
-              sh ' ansible-playbook deploy.yml '  
-            }
-        
-    
+     stage('adding plugin'){
+
+      sh 'ansible-playbook deploy.yml'
+
+      } 
+     
 }
