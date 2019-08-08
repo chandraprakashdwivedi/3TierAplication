@@ -1,10 +1,9 @@
 properties([ disableConcurrentBuilds(),buildDiscarder(logRotator(numToKeepStr:'10')), pipelineTriggers([githubPush()]) ])
 
-node{
-      deleteDir()
-      checkout scm
-}
+
 stage('deployment'){
+deleteDir()
+checkout scm
 
 sh 'ansible-playbook deploy.yml'     
 
