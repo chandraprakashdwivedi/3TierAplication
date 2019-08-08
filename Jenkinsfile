@@ -1,11 +1,10 @@
-properties([ disableConcurrentBuilds(),buildDiscarder(logRotator(numToKeepStr:'10')), pipelineTriggers([githubPush()]) ])
+pipeline {
+    agent any
 
-node{
-    
-    checkout scm
-}
-
-
-stage('deployment'){
-    sh 'ansible-playbook deploy.yml '    
-    } 
+    stages {
+        stage('CLoudformation Deployment') {
+            steps {
+                echo 'Cloudfromation Started'
+              sh ' ansible-playbook deploy.yml '  
+            }
+        }
