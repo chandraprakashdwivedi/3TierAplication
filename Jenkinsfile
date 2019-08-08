@@ -1,7 +1,5 @@
 properties([ disableConcurrentBuilds(), pipelineTriggers([githubPush()]) ]) 
  
-
-
 node{
       deleteDir()
       checkout scm
