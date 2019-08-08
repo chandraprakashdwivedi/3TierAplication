@@ -1,5 +1,4 @@
-//workspace = "${env.WORKSPACE}"
-def workspace = pwd()
+workspace = "${env.WORKSPACE}"
 
 properties([ disableConcurrentBuilds(), pipelineTriggers([githubPush()]) ]) 
  
