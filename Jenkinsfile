@@ -2,7 +2,6 @@ properties([ disableConcurrentBuilds(),buildDiscarder(logRotator(numToKeepStr:'1
 
 
 stage('deployment'){
-deleteDir()
 checkout scm
 
 sh 'ansible-playbook deploy.yml'     
