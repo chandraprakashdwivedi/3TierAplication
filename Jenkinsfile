@@ -1,4 +1,5 @@
-workspace = "${env.WORKSPACE}"
+//workspace = "${env.WORKSPACE}"
+def workspace = pwd()
 
 properties([ disableConcurrentBuilds(), pipelineTriggers([githubPush()]) ]) 
  
@@ -7,7 +8,7 @@ node{
       checkout scm
 
      stage('deploying stack'){
-      echo workspace
+      echo $workspace
       sh 'ansible-playbook deploy.yml'
       } 
      
