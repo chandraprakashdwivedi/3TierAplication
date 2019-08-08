@@ -2,22 +2,20 @@
   connection: local
   gather_facts: false
   vars_files:
-     - group_vars/default/main.yml
-     - group_vars/site/main.yml
+     - group_vars/all.yml
      
    tasks:
-      - name: cloudformation - ecs - task-definition-service - render template
+      - name: cloudformation template creation
         template:
-          src=roles/common/ecs/task-definition-service/templates/task-definition-service.yml.j2
-          dest=roles/common/ecs/task-definition-service/templates-generated/{{item.stack_name}}-template.yml
-        with_items: "{{ task_definition_service_items }}"
+          src=templates/cfn-template.yml
+          dest=templates-generated/cfn-template-gen.yml
         check_mode: no
 
       - name: cloudformation - ecs - task-definition-service
         cloudformation:
-          stack_name: "{{ item.stack_name }}"
+          stack_name: tier3Application
           state: "present"
           region: "{{ region }}"
           disable_rollback: true
-          template: roles/common/ecs/task-definition-service/templates-generated/{{item.stack_name}}-template.yml
-        with_items: "{{ task_definition_service_items }}"
+          template: templates-generated/cfn-template-gen.yml
+  
