@@ -12,5 +12,5 @@
         state: "present"
         region: "{{ region }}"
         disable_rollback: true
-        template: $workspace/template/cfn-template.yml
+        template: template/cfn-template.yml
   
