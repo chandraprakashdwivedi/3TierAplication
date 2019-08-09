@@ -7,9 +7,6 @@ Parameters:
   VPC:
     Type: AWS::EC2::VPC::Id
     Default: {{ data.vpc }}
-  ServiceName:
-    Type: String
-    Default: {{ data.service_name }}
   WebPort:
     Type: Number
     Default: {{ data.web_port}}
