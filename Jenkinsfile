@@ -1,5 +1,5 @@
-//workspace = "${env.WORKSPACE}"
-def workspace = "/var/lib/jenkins/jobs/3tierApp"
+def workspace = "${env.WORKSPACE}"
+//def workspace = "/var/lib/jenkins/jobs/3tierApp"
  
 properties([ disableConcurrentBuilds(), pipelineTriggers([githubPush()]) ]) 
  
