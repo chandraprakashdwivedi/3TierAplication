@@ -3,7 +3,7 @@ Description: 3 tier web aplication
 Parameters:
   subnet0:
     Type: AWS::EC2::Subnet::Id
-    Default: {{subnet0}}
+    Default: {{data.subnet0}}
   VPC:
     Type: AWS::EC2::VPC::Id
     Default: {{ vpc }}
