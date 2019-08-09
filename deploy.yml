@@ -3,14 +3,18 @@
   gather_facts: false
   vars_files:
      - group_vars/all.yml
- 
   tasks:
+        - name: cloudformation template creation
+          template:
+            src= template/cfn-template.yml
+            dest= templates-generated/cfn-template-gen.yml
+          check_mode: no
 
-    - name: cloudformation operation
-      cloudformation:
-        stack_name: tier3Application
-        state: "present"
-        region: "{{ region }}"
-        disable_rollback: true
-        template: template/cfn-template.yml
+        - name: cloudformation operation
+          cloudformation:
+            stack_name: tier3Application
+            state: "present"
+            region: "{{ region }}"
+            disable_rollback: true
+            template: templates-generated/cfn-template-gen.yml
   
