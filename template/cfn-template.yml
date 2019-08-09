@@ -1,12 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 3 tier web aplication
 Parameters:
-  VPC:
-    Type: AWS::EC2::VPC::Id
-    Default: {{ vpc }}
   subnet0:
     Type: AWS::EC2::Subnet::Id
     Default: {{sunet0}}
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Default: {{ vpc }}
   ServiceName:
     Type: String
     Default: {{ service_name }}
