@@ -16,7 +16,7 @@
       cloudformation:
         stack_name: tier3Application
         state: "present"
-        region: "{{ region }}"
+        region: "ap-south-1"
         disable_rollback: true
         template: templates-generated/cfn-template-gen.yml
 
