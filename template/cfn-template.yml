@@ -1,30 +1,30 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 3 tier web aplication
 Parameters:
-  VPC:
-    Type: AWS::EC2::VPC::Id
-    Default: {{ vpc }}
   subnet0:
     Type: AWS::EC2::Subnet::Id
-    Default: {{subnet0}}
+    Default: {{data.subnet0}}
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Default: {{ data.vpc }}
   WebPort:
     Type: Number
-    Default: {{ web_port }}
+    Default: {{ data.web_port}}
   DbPort:
     Type: Number
-    Default: {{ db_port }}
+    Default: {{ data.db_port}}
   LbPort:
     Type: Number
-    Default: {{ lb_port }}
+    Default: {{ data.lb_port}}
   KeyName:
     Type: String
-    Default: {{ ec2_key }}
+    Default: {{ data.ec2_key }}
   InstanceType:
     Type: String
-    Default: {{ instace_type }}
+    Default: {{ data.instace_type }}
   LatestAmiId:
     Type: String
-    Default: {{ ami_id }}
+    Default: {{ data.ami_id}}
 
 Resources:
   WebSecurityGroup:
