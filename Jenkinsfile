@@ -1,4 +1,4 @@
-workspace = "${env.WORKSPACE}"
+//workspace = "${env.WORKSPACE}"
 workspace = '/var/lib/jenkins/jobs/3tierApp'
  
 properties([ disableConcurrentBuilds(), pipelineTriggers([githubPush()]) ]) 
