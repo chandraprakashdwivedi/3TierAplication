@@ -1,5 +1,4 @@
 data:
-    - 
       subnet0: subnet-0d45e736b1ebbdb33
       vpc: vpc-08b1db4a37659e6e3
       web_port: 80 
