@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 3 tier web aplication
-Parameter:
+Parameters:
   VPC:
     Type: AWS::EC2::VPC::Id
     Default: {{ vpc }}
