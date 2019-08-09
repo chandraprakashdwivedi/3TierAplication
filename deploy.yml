@@ -9,7 +9,7 @@
       template:
         src=template/cfn-template.yml
         dest=templates-generated/cfn-template-gen.yml
-      with_items: "{{ data }}"
+      with_items: "{{ data.vpc }}"
       check_mode: no
 
     - name: cloudformation operation
