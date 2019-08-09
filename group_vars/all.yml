@@ -6,3 +6,4 @@ lb_port: 80
 ec2_key: 2tierapp
 instace_type: t2.micro
 ami_id: ami-0d2692b6acea72ee6
+region: ap-south-1
