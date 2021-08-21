@@ -1,0 +1,15 @@
+    LaunchConfig:
+      Type: "AWS::AutoScaling::LaunchConfiguration"
+      Properties:
+        InstanceType: "t2.micro"
+        KeyName:  !Ref 'KeyName'
+        AssociatePublicIpAddress: false
+        ImageId: !Ref 'LatestAmiId'
+        SecurityGroups: !Ref SecurityGroups
+        BlockDeviceMappings:
+            -
+              DeviceName: "/dev/xvda"
+              Ebs:
+                VolumeSize: 8
+                VolumeType: gp2
+                DeleteOnTermination: true
