@@ -5,7 +5,7 @@
         KeyName:  !Ref 'KeyName'
         AssociatePublicIpAddress: false
         ImageId: !Ref 'LatestAmiId'
-        SecurityGroups: !Ref SecurityGroups
+        SecurityGroups: !Ref WebSecurityGroup
         BlockDeviceMappings:
             -
               DeviceName: "/dev/xvda"
